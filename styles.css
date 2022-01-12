@@ -37,9 +37,25 @@
   cursor: pointer;
 }
 
+.button:hover {
+  background-color: #ebebeb;
+}
+
+.button:active {
+  background-color: #bbbcbe;
+}
+
 .button:last-child {
   background-color: #df974c;
   color: white;
+}
+
+.button:last-child:hover {
+  background-color: #dfb07e;
+}
+
+.button:last-child:active {
+  background-color: #dd8d37;
 }
 
 .double {
