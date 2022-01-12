@@ -11,6 +11,7 @@
   color: white;
   font-size: 40px;
   text-align: right;
+  padding: 20px 5px;
 }
 
 .button-row {
@@ -25,7 +26,14 @@
 }
 
 .button {
+  background-color: #d8d9db;
+  color: black;
+  height: 100px;
+  border: none;
+  border-radius: 0;
+  font-size: 40px;
   width: 24.5%;
+  cursor: pointer;
 }
 
 .double {
