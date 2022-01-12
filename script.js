@@ -1,7 +1,6 @@
 let total = 0;
-let operand1 = 0;
-let operand2 = 0;
-let operation = "0";
+let buffer = 0;
+let operator = "0";
 let commands = new Map();
 
 commands.set("C", clear);
@@ -19,80 +18,80 @@ for (let row of buttonRows) {
   row.addEventListener("click", buttonPressed);
 }
 
+function buttonPressed(event) {
+  let buttonText = event.target.innerText;
+  let execute = commands.get(buttonText);
+  if (typeof execute != "undefined") {
+    execute();
+  } 
+  else {
+    buffer = buffer * 10 + parseInt(buttonText);
+    display.innerText = buffer;
+    }
+    console.log("-----------");
+    console.log(`Button: ${buttonText}`);
+    console.log(`Total: ${total}`);
+    console.log(`Buffer: ${buffer}`);
+    console.log(`Operator: ${operator}`);
+  }
+
 function clear() {
   display.innerText = "0";
-  operand1 = 0;
-  operation = "0";
+  buffer = 0;
+  operator = "0";
+  total = 0;
 }
 
 function deleteOne() {
-  operand1 = Math.floor(operand1 / 10);
-  display.innerText = operand1;
+  if(buffer != 0) {
+    buffer = Math.floor(buffer / 10);
+    display.innerText = buffer;
+  }
+}
+
+function newTotal() {
+  calculate();
+  buffer = 0;
+  display.innerText = total;
 }
 
 function divide() {
-  operation = "divide";
-  display.innerText = "0";
+  calculate();
+  operator = "divide";
 }
 
 function multiply() {
-  operation = "multiply";
-  display.innerText = "0";
+  calculate();
+  operator = "multiply";
 }
 
 function substract() {
-  operation = "substract";
-  display.innerText = "0";
+  calculate();
+  operator = "substract";
 }
 
 function add() {
-  operation = "add";
-  display.innerText = "0";
+  calculate();
+  operator = "add";
 }
 
 function calculate() {
-  let result = 0;
-
-  switch (operation) {
+  switch (operator) {
     case "divide":
-      result = operand1 / operand2;
+      total = total / buffer;
       break;
     case "multiply":
-      result = operand1 * operand2;
+      total = total * buffer;
       break;
     case "substract":
-      result = operand1 - operand2;
+      total = total - buffer;
       break;
     case "add":
-      result = operand1 + operand2;
+      total = total + buffer;
       break;
     default:
+      total = buffer;
   }
-  display.innerText = result;
-  operand1 = result;
-  operand2 = 0;
-  operation = "0";
-}
-
-function buttonPressed(event) {
-  let text = event.target.innerText
-  let execute = commands.get(text);
-  if (typeof execute != "undefined") {
-    execute();
-  } else {
-    if(operation === "0") {
-      operand1 = operand1 * 10 + parseInt(text);
-      display.innerText = operand1;
-    } else {
-      operand2 = operand2 * 10 + parseInt(text);
-      display.innerText = operand2;
-    }
-  }
-  /* Debug 
-  console.log("-----------");
-  console.log(`Button: ${text}`);
-  console.log(`Operand1: ${operand1}`);
-  console.log(`Operand2: ${operand2}`);
-  console.log(`Operation: ${operation}`);
-  */
+  display.innerText = total;
+  buffer = 0;
 }
