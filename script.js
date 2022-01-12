@@ -1,97 +1,98 @@
-let total = 0;
-let buffer = 0;
-let operator = "0";
-let commands = new Map();
+const CLEAR = "C";
+const DELETE = "←";
+const DIVIDE = "÷";
+const MULTIPLY = "×";
+const SUBSTRACT = "-";
+const ADD = "+";
+const CALCULATE = "=";
 
-commands.set("C", clear);
-commands.set("←", deleteOne);
-commands.set("÷", divide);
-commands.set("×", multiply);
-commands.set("-", substract);
-commands.set("+", add);
-commands.set("=", calculate);
-
-const buttonRows = document.querySelectorAll(".button-row");
+const buttons = document.querySelector(".calc-buttons");
 const display = document.querySelector(".display");
 
-for (let row of buttonRows) {
-  row.addEventListener("click", buttonPressed);
-}
+let total = 0;
+let buffer = "0";
+let prevOperator = "0";
 
-function buttonPressed(event) {
-  let buttonText = event.target.innerText;
-  let execute = commands.get(buttonText);
-  if (typeof execute != "undefined") {
-    execute();
-  } 
+buttons.addEventListener("click", function (event) {
+  buttonPressed(event.target.innerText);
+});
+
+function buttonPressed(value) {
+  if (isNaN(value)) {
+    handleSymbol(value);
+  }
   else {
-    buffer = buffer * 10 + parseInt(buttonText);
-    display.innerText = buffer;
-    }
-    console.log("-----------");
-    console.log(`Button: ${buttonText}`);
-    console.log(`Total: ${total}`);
-    console.log(`Buffer: ${buffer}`);
-    console.log(`Operator: ${operator}`);
+    handleNumber(value);
   }
 
-function clear() {
-  display.innerText = "0";
-  buffer = 0;
-  operator = "0";
-  total = 0;
+  console.log("-----------");
+  console.log(`Button: ${value}`);
+  console.log(`Total: ${total}`);
+  console.log(`Buffer: ${buffer}`);
+  console.log(`Operator: ${prevOperator}`);
 }
 
-function deleteOne() {
-  if(buffer != 0) {
-    buffer = Math.floor(buffer / 10);
-    display.innerText = buffer;
+function handleNumber(value) {
+  if(buffer === "0") {
+    buffer = value;
   }
+  else {
+    buffer += value;
+  }
+  display.innerText = buffer;
 }
 
-function newTotal() {
-  calculate();
-  buffer = 0;
-  display.innerText = total;
-}
-
-function divide() {
-  calculate();
-  operator = "divide";
-}
-
-function multiply() {
-  calculate();
-  operator = "multiply";
-}
-
-function substract() {
-  calculate();
-  operator = "substract";
-}
-
-function add() {
-  calculate();
-  operator = "add";
+function handleSymbol(value) {
+  switch (value) {
+    case CLEAR:
+      clear();
+      break;
+    case DELETE:
+      deleteOne();
+      break;
+    default:
+      calculate();
+      prevOperator = value;
+  }
+  
 }
 
 function calculate() {
-  switch (operator) {
-    case "divide":
-      total = total / buffer;
+  switch (prevOperator) {
+    case DIVIDE:
+      total /= parseInt(buffer);
       break;
-    case "multiply":
-      total = total * buffer;
+    case MULTIPLY:
+      total *= parseInt(buffer);
       break;
-    case "substract":
-      total = total - buffer;
+    case SUBSTRACT:
+      total -= parseInt(buffer);
       break;
-    case "add":
-      total = total + buffer;
+    case ADD:
+      total += parseInt(buffer);
       break;
+    case CALCULATE:
+      return;
     default:
-      total = buffer;
+      total = parseInt(buffer);
   }
+  buffer = "0";
   display.innerText = total;
-  buffer = 0;
+}
+
+function clear() {
+  buffer = "0";
+  prevOperator = "0";
+  total = 0;
+  display.innerText = buffer;
+}
+
+function deleteOne() {
+  if (buffer.length === 1) {
+    buffer = "0";
+  }
+  else {
+    buffer = buffer.substring(0, buffer.length - 1);
+  }
+  display.innerText = buffer;
 }
